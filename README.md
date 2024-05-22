@@ -9,7 +9,7 @@ In this node/express template
 
    - Express framework 
    - Typescript
-   - SQL - MySQL or PostgreSQL
+   - DB - MySQL or PostgreSQL
    - Prisma ORM
    - REST api 
    - JWT auth
@@ -41,6 +41,7 @@ DM
 
 #### Find more other Starter kits of mine ?   
 
+  Now you are here [Express + Prisma ORM + SQL - rest api](https://github.com/Bonekyaw/node-express-prisma-rest)
   [Express + Apollo server + mongoose - graphql api](https://github.com/Bonekyaw/node-express-apollo-nosql)  
   [Express + graphql js + mongoose - graphql api](https://github.com/Bonekyaw/node-express-nosql-graphql)  
   [Express + graphql js + sequelize ORM - graphql api](https://github.com/Bonekyaw/node-express-sql-graphql)  
