@@ -23,6 +23,7 @@ For MySQL
 
 ```
 DATABASE_URL="mysql://username:password@localhost:3306/mydb"
+TOKEN_SECRET="something hard to guest"
 
 ```
 
@@ -30,6 +31,7 @@ For PostgreSQL
 
 ```
 DATABASE_URL="postgresql://username:password@localhost:5432/mydb?schema=public"
+TOKEN_SECRET="something hard to guest"
 
 ```
 
@@ -41,6 +43,7 @@ DM
 
 #### Find more other Starter kits of mine ?   
 
+  [Express + Prisma ORM + mongodb - rest api](https://github.com/Bonekyaw/node-express-prisma-mongodb)  
   Now you are here [Express + Prisma ORM + SQL - rest api](https://github.com/Bonekyaw/node-express-prisma-rest)  
   [Express + Apollo server + mongoose - graphql api](https://github.com/Bonekyaw/node-express-apollo-nosql)  
   [Express + graphql js + mongoose - graphql api](https://github.com/Bonekyaw/node-express-nosql-graphql)  
