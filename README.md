@@ -24,7 +24,7 @@ For MySQL
 
 ```
 DATABASE_URL="mysql://username:password@localhost:3306/mydb"
-TOKEN_SECRET="something hard to guest"
+TOKEN_SECRET="something hard to guess"
 
 ```
 
@@ -32,11 +32,11 @@ For PostgreSQL
 
 ```
 DATABASE_URL="postgresql://username:password@localhost:5432/mydb?schema=public"
-TOKEN_SECRET="something hard to guest"
+TOKEN_SECRET="something hard to guess"
 
 ```
 Please note.   
-*TOKEN_SECRET* should be complex and hard to guest.  
+*TOKEN_SECRET* should be complex and hard to guess.  
 After git clone, it should be run.
 
 ```
