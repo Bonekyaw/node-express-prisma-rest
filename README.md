@@ -57,7 +57,7 @@ DM
 
   
   [Express + Prisma ORM + mongodb - rest api](https://github.com/Bonekyaw/node-express-prisma-mongodb)  
-  Now you are here [Express + Prisma ORM + SQL - rest api](https://github.com/Bonekyaw/node-express-prisma-rest)  
+  [Express + Prisma ORM + SQL - rest api](https://github.com/Bonekyaw/node-express-prisma-rest) - Now you are here  
   [Express + mongodb - rest api](https://github.com/Bonekyaw/node-express-mongodb-rest)  
   [Express + mongoose ODM - rest api](https://github.com/Bonekyaw/node-express-nosql-rest)  
   [Express + sequelize ORM - rest api](https://github.com/Bonekyaw/node-express-sql-rest)  
