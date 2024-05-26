@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
     "sourceMap": true,
     "outDir": "dist",
     "strict": true,
     "lib": ["esnext"],
     "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types" // Adjust this path as needed
+    ]
   }
 }
-

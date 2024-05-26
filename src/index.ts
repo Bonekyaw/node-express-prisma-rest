@@ -6,6 +6,7 @@ import cors from "cors";
 // import bodyParser from 'body-parser';
 
 import { limiter } from "./middlewares/rateLimiter";
+import isAuth from "./middlewares/isAuth";
 import adminRoutes from "./routes/v1/admin";
 import authRoutes from "./routes/v1/auth";
 
@@ -25,7 +26,7 @@ app.use(cors());
 app.use(limiter);
 
 app.use("/api/v1", authRoutes);
-app.use("/api/v1", adminRoutes);
+app.use("/api/v1", isAuth, adminRoutes);
 
 const PORT = process.env.PORT || 8080;
 

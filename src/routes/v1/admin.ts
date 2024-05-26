@@ -1,8 +1,14 @@
 import express from 'express';
 
-import { index, store, show, update, destroy } from '../../controllers/adminController';
+import upload from "../../middlewares/uploadFile";
+import { uploadProfile, index, store, show, update, destroy } from '../../controllers/adminController';
 
 const router = express.Router();
+
+// Upload single image
+router.put('/admins/:id/upload', upload.single('avatar'), uploadProfile );
+// Upload multiple images
+// router.put('/admins/:id/upload',upload.array('avatar'), adminController.uploadProfile );
 
 // GET localhost:8080/admins - get all admins
 router.get('/admins', index);

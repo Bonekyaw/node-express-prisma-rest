@@ -30,3 +30,11 @@ export const checkOtpErrorIfSameDate = (isSameDate: boolean, otpCheck: any) => {
     throw err;
   }
 };
+
+export const checkAdmin = (admin: any) => {
+  if (!admin) {
+    const err: any = new Error("This account has not registered!.");
+    err.status = 401;
+    throw err;
+  }
+};

@@ -15,7 +15,8 @@ In this node/express template
    - JWT auth
    - bcrypt
    - express-validator 
-   - error handler etc.
+   - error handler 
+   - file uploading etc.
 
 In order to use it,
 

@@ -1,21 +1,47 @@
+import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
+import { unlink } from "node:fs/promises";
 
-import { getAllAdmins } from "../services/authService";
+import { getAdminById } from "../services/adminService";
+import { updateAdmin } from "../services/authService";
+import { checkAdmin } from "../utils/auth";
+import { checkUploadFile } from "../utils/file";
+
+// Extend the Request interface to include the adminId property
+interface CustomRequest extends Request {
+  adminId?: number; // or string, depending on your ID type
+  file?: any;
+}
+
+export const uploadProfile = asyncHandler(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    // const id = req.params.id;
+    const id = req.adminId;
+    const image = req.file;
+    // console.log("Multiple Images array", req.files);  // For multiple files uploaded
+
+    const admin = await getAdminById(id!);
+    checkAdmin(admin);
+    checkUploadFile(image);
+    const imageUrl = image.path.replace("\\", "/");
+
+    if (admin!.profile) {
+      await unlink(admin!.profile); // Delete an old profile image because it accepts just one.
+    }
+
+    const adminData = {
+      profile: imageUrl,
+    };
+    await updateAdmin(id!, adminData);
+
+    res
+      .status(200)
+      .json({ message: "Successfully uploaded the image.", profile: imageUrl });
+  }
+);
 
 export const index = asyncHandler(async (req, res, next) => {
-  const filteredData = {
-    select: {
-      name: true,
-      phone: true,
-      status: true,
-    },
-  };
-  const admins = await getAllAdmins(filteredData);
-
-  res.status(200).json({
-    message: "This is just an example. In real app, you should check auth.",
-    admins,
-  });
+  res.json({ success: true });
 });
 
 export const store = asyncHandler(async (req, res, next) => {
