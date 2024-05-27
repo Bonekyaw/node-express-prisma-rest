@@ -28,7 +28,14 @@ export const uploadProfile = asyncHandler(
 
     if (admin!.profile) {
       // await unlink(admin!.profile); // Delete an old profile image because it accepts just one.
-      await unlink(path.join(__dirname, "../..", admin!.profile));
+      try {
+        await unlink(path.join(__dirname, "../..", admin!.profile));
+      } catch (error) {
+        const adminData = {
+          profile: imageUrl,
+        };
+        await updateAdmin(id!, adminData);
+      }
     }
 
     const adminData = {
