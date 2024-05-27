@@ -42,6 +42,8 @@ Please note.
 If you use file uploading feature in this kit,  
 create nested folders `uploads/images` in the root directory.  
 But making directories is up to you. You can configure in `src/middlewares/uploadFile.js`.  
+For large projects, it is the best solution to use aws S3, DigitalOcean space, etc., 
+instead of using file system.  
 
 After git clone, it should be run.
 

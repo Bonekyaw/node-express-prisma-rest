@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import { unlink } from "node:fs/promises";
+import path from "path";
 
 import { getAdminById } from "../services/adminService";
 import { updateAdmin } from "../services/authService";
@@ -26,7 +27,8 @@ export const uploadProfile = asyncHandler(
     const imageUrl = image.path.replace("\\", "/");
 
     if (admin!.profile) {
-      await unlink(admin!.profile); // Delete an old profile image because it accepts just one.
+      // await unlink(admin!.profile); // Delete an old profile image because it accepts just one.
+      await unlink(path.join(__dirname, "../..", admin!.profile));
     }
 
     const adminData = {
