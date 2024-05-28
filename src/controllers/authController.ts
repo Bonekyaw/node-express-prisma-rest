@@ -269,8 +269,9 @@ export const confirmPassword = [
 
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
+    const randToken = rand() + rand() + rand();
 
-    const adminData = { phone: req.body.phone, password: hashPassword };
+    const adminData = { phone: req.body.phone, password: hashPassword, randToken: randToken };
     const newAdmin = await createAdmin(adminData);
 
     // jwt token
@@ -281,6 +282,7 @@ export const confirmPassword = [
       message: "Successfully created an account.",
       token: jwtToken,
       user_id: newAdmin.id,
+      randomToken: randToken,
     });
   }),
 ];
@@ -357,9 +359,16 @@ export const login = [
       return next(err);
     }
 
+    const randToken = rand() + rand() + rand();
     if (admin!.error >= 1) {
       const adminData = {
         error: 0,
+        randToken: randToken,
+      };
+      result = await updateAdmin(admin!.id, adminData);
+    } else {
+      const adminData = {
+        randToken: randToken,
       };
       result = await updateAdmin(admin!.id, adminData);
     }
@@ -371,6 +380,7 @@ export const login = [
       message: "Successfully Logged In.",
       token: jwtToken,
       user_id: admin!.id,
+      randomToken: randToken,
     });
   }),
 ];
@@ -399,9 +409,10 @@ export const refreshToken = [
       err.status = 401;
       throw err;
     }
-    const { randomToken, user_id } = req.body;
+    const randomToken = req.body.randomToken;
+    let user_id = parseInt(req.body.user_id);  // Hey take care, we want only Integer.
 
-    const admin = await getAdminById(user_id);
+    const admin = await getAdminById(user_id);  
     checkAdmin(admin);
 
     if (admin!.randToken !== randomToken) {
