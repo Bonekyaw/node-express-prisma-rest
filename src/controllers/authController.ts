@@ -14,6 +14,7 @@ import {
   checkPhoneIfNotExist,
   checkOtpErrorIfSameDate,
   checkOtpPhone,
+  checkAdmin,
 } from "./../utils/auth";
 
 import {
@@ -24,6 +25,7 @@ import {
   createAdmin,
   updateAdmin,
 } from "../services/authService";
+import { getAdminById } from "../services/adminService";
 
 /*
  * POST localhost:8080/api/v1/register
@@ -369,6 +371,70 @@ export const login = [
       message: "Successfully Logged In.",
       token: jwtToken,
       user_id: admin!.id,
+    });
+  }),
+];
+
+export const refreshToken = [
+  // Validate and sanitize fields.
+  body("randomToken", "randomToken must not be empty.")
+    .trim()
+    .notEmpty()
+    .escape(),
+  body("user_id", "User ID must not be empty.").trim().notEmpty().escape(),
+
+  asyncHandler(async (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+      const err: any = new Error("Validation failed!");
+      err.status = 400;
+      return next(err);
+    }
+
+    const authHeader = req.get("Authorization");
+    if (!authHeader) {
+      const err: any = new Error("You are not an authenticated user!.");
+      err.status = 401;
+      throw err;
+    }
+    const { randomToken, user_id } = req.body;
+
+    const admin = await getAdminById(user_id);
+    checkAdmin(admin);
+
+    if (admin!.randToken !== randomToken) {
+      const adminData = {
+        error: 5,
+      };
+      await updateAdmin(user_id, adminData);
+
+      const err: any = new Error(
+        "This request may be an attack. Please contact the admin team."
+      );
+      err.status = 400;
+      return next(err);
+    }
+
+    const randToken = rand() + rand() + rand();
+
+    const adminData = {
+      randToken: randToken,
+    };
+    await updateAdmin(user_id, adminData);
+
+    // jwt token
+    let payload = { id: user_id };
+    const jwtToken = jwt.sign(payload, process.env.TOKEN_SECRET!, {
+      expiresIn: "1h",
+    });
+
+    res.status(201).json({
+      message: "Successfully sent a new token.",
+      token: jwtToken,
+      user_id: user_id,
+      randomToken: randToken,
     });
   }),
 ];

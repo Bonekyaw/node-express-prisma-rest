@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { register, verifyOTP, confirmPassword, login } from '../../controllers/authController';
+import { register, verifyOTP, confirmPassword, login, refreshToken } from '../../controllers/authController';
 import { validatePhone } from '../../middlewares/check';
 
 const router = express.Router();
@@ -16,5 +16,8 @@ router.post('/register', validatePhone, register);
 router.post('/verify-otp', verifyOTP);
 router.post('/confirm-password', confirmPassword);
 router.post('/login', validatePhone, login);
+
+// Refresh Token for expired jwt token. 
+router.post('/refresh-token', refreshToken);
 
 export default router;
