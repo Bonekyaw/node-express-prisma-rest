@@ -391,7 +391,7 @@ export const refreshToken = [
     .trim()
     .notEmpty()
     .escape(),
-  body("user_id", "User ID must not be empty.").trim().notEmpty().escape(),
+  body("user_id", "User ID must not be empty.").isInt().toInt(),
 
   asyncHandler(async (req, res, next) => {
     // Extract the validation errors from a request.
@@ -409,8 +409,8 @@ export const refreshToken = [
       err.status = 401;
       throw err;
     }
-    const randomToken = req.body.randomToken;
-    let user_id = parseInt(req.body.user_id);  // Hey take care, we want only Integer.
+    const { user_id, randomToken } = req.body;
+    // let user_id = parseInt(req.body.user_id);  // Hey take care, we want only Integer.
 
     const admin = await getAdminById(user_id);  
     checkAdmin(admin);
