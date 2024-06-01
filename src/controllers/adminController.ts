@@ -76,8 +76,9 @@ export const index = [
     // authorise(false, admin, "user");
 
     const filters = { status: "active" };
-    const order = { id: "desc" };
+    const order = { createdAt: "desc" };
     const fields = {
+      id: true,
       name: true,
       phone: true,
       role: true,

@@ -5,29 +5,33 @@ export const offset = asyncHandler(
     model: any,
     page = 1,
     limit = 10,
-    filters = {},
-    order = {},
-    fields = {},
+    filters = null,
+    order = null,
+    fields = null,
     relation = null
   ) => {
     const offset = (page - 1) * limit;
 
-    const options = relation
-      ? {
-          skip: offset,
-          take: limit,
-          where: filters,
-          orderBy: order,
-          select: fields,
-        }
-      : {
-          skip: offset,
-          take: limit,
-          where: filters,
-          orderBy: order,
-          include: relation,
-        };
-    const count = await model.count({ where: filters });
+    let options = { skip: offset, take: limit } as any;
+    if (filters) {
+      options.where = filters;
+    }
+    if (order) {
+      options.orderBy = order;
+    }
+    if (fields) {
+      options.select = fields;
+    }
+    if (relation) {
+      options.include = relation;
+    }
+
+    let totalCount = {};
+    if (filters) {
+      totalCount = { where: filters };
+    }
+
+    const count = await model.count(totalCount);
     const results = await model.findMany(options);
 
     return {
@@ -47,28 +51,27 @@ export const noCount = asyncHandler(
     model: any,
     page = 1,
     limit = 10,
-    filters = {},
-    order = {},
-    fields = {},
+    filters = null,
+    order = null,
+    fields = null,
     relation = null
   ) => {
     const offset = (page - 1) * limit;
 
-    const options = relation
-      ? {
-          skip: offset,
-          take: limit + 1,
-          where: filters,
-          orderBy: order,
-          select: fields,
-        }
-      : {
-          skip: offset,
-          take: limit + 1,
-          where: filters,
-          orderBy: order,
-          include: relation,
-        };
+    let options = { skip: offset, take: limit + 1 } as any;
+    if (filters) {
+      options.where = filters;
+    }
+    if (order) {
+      options.orderBy = order;
+    }
+    if (fields) {
+      options.select = fields;
+    }
+    if (relation) {
+      options.include = relation;
+    }
+
     const results = await model.findMany(options);
     let hasNextPage = false;
     if (results.length > limit) {
@@ -92,43 +95,29 @@ export const cursor = asyncHandler(
     model: any,
     cursor = null,
     limit = 10,
-    filters = {},
-    order = [],
-    fields = {},
+    filters = null,
+    order = null,
+    fields = null,
     relation = null
   ) => {
+    let options = { take: limit } as any;
+    if (cursor) {
+      options.skip = 1;
+      options.cursor = cursor;
+    }
+    if (filters) {
+      options.where = filters;
+    }
+    if (order) {
+      options.orderBy = order;
+    }
+    if (fields) {
+      options.select = fields;
+    }
+    if (relation) {
+      options.include = relation;
+    }
 
-    const options = relation
-      ? cursor
-        ? {
-            take: limit,
-            skip: 1, // Skip the cursor
-            cursor: cursor,
-            where: filters,
-            orderBy: order,
-            select: fields,
-          }
-        : {
-            take: limit,
-            where: filters,
-            orderBy: order,
-            select: fields,
-          }
-      : cursor
-        ? {
-            take: limit,
-            skip: 1, // Skip the cursor
-            cursor: cursor,
-            where: filters,
-            orderBy: order,
-            include: relation,
-          }
-        : {
-            take: limit,
-            where: filters,
-            orderBy: order,
-            include: relation,
-          };
     const results = await model.findMany(options);
     const lastPostInResults = results[limit - 1]; // Remember: zero-based index! :)
     const myCursor = lastPostInResults.id; 
