@@ -14,8 +14,8 @@
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.12.12",
-    "nodemon": "^3.1.0",
+    "@types/node": "^20.12.13",
+    "nodemon": "^3.1.2",
     "prettier-plugin-prisma": "^5.0.0",
     "prisma": "^5.14.0",
     "ts-node": "^10.9.2",

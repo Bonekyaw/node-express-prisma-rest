@@ -2,16 +2,20 @@ import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import { unlink } from "node:fs/promises";
 import path from "path";
+import { body, query, validationResult } from "express-validator";
+import { PrismaClient } from "@prisma/client"; // { Prisma, PrismaClient }
+const prisma = new PrismaClient();
 
 import { getAdminById } from "../services/adminService";
 import { updateAdmin } from "../services/authService";
-import { checkAdmin } from "../utils/auth";
 import { checkUploadFile } from "../utils/file";
+import { offset, noCount, cursor } from "../utils/paginate";
 
 // Extend the Request interface to include the adminId property
 interface CustomRequest extends Request {
   adminId?: number; // or string, depending on your ID type
   file?: any;
+  admin?: any;
 }
 
 export const uploadProfile = asyncHandler(
@@ -21,8 +25,8 @@ export const uploadProfile = asyncHandler(
     const image = req.file;
     // console.log("Multiple Images array", req.files);  // For multiple files uploaded
 
-    const admin = await getAdminById(id!);
-    checkAdmin(admin);
+    const admin = req.admin;
+
     checkUploadFile(image);
     const imageUrl = image.path.replace("\\", "/");
 
@@ -49,9 +53,60 @@ export const uploadProfile = asyncHandler(
   }
 );
 
-export const index = asyncHandler(async (req, res, next) => {
-  res.json({ success: true });
-});
+export const index = [
+  // Validate and sanitize fields.
+  query("page", "Page number must be integer.").isInt({ gt: 0 }).toInt(),
+  query("limit", "Limit number must be integer.").isInt({ gt: 0 }).toInt(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+      const err: any = new Error("Validation failed!");
+      err.status = 400;
+      return next(err);
+    }
+
+    const { page, limit } = req.query;
+    // const limit = req.query.limit;
+    // const cursors = req.query.cursor ? { id: +req.query.cursor } : null;
+
+    // Authorization - if it is "user" role, no one is allowed.
+    // Same as - authorise(true, admin, "super", "manager", "editor")
+    // authorise(false, admin, "user");
+
+    const filters = { status: "active" };
+    const order = { id: "desc" };
+    const fields = {
+      name: true,
+      phone: true,
+      role: true,
+      status: true,
+      lastLogin: true,
+      profile: true,
+      createdAt: true,
+    };
+
+    const admins = await offset(
+      prisma.admin,
+      page,
+      limit,
+      filters,
+      order,
+      fields
+    );
+    // const admins = await noCount(prisma.admin, page, limit, filters, order, fields);
+    // const admins = await cursor(
+    //   prisma.admin,
+    //   cursors,
+    //   limit,
+    //   filters,
+    //   order,
+    //   fields
+    // );
+    res.status(200).json(admins);
+  }),
+];
 
 export const store = asyncHandler(async (req, res, next) => {
   res.json({ success: true });
