@@ -119,8 +119,8 @@ export const cursor = asyncHandler(
     }
 
     const results = await model.findMany(options);
-    const lastPostInResults = results[limit - 1]; // Remember: zero-based index! :)
-    const myCursor = lastPostInResults.id; 
+    const lastPostInResults = results.length ? results[limit - 1] : null; // Remember: zero-based index! :)
+    const myCursor = results.length ? lastPostInResults.id : null; 
 
     return {
       data: results,

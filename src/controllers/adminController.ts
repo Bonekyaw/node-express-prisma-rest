@@ -87,6 +87,7 @@ export const index = [
       profile: true,
       createdAt: true,
     };
+    // const relation = {};
 
     const admins = await offset(
       prisma.admin,
@@ -94,7 +95,7 @@ export const index = [
       limit,
       filters,
       order,
-      fields
+      fields,
     );
     // const admins = await noCount(prisma.admin, page, limit, filters, order, fields);
     // const admins = await cursor(
