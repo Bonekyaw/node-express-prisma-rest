@@ -213,7 +213,7 @@ authorise(true, user, "admin");
 `ture, "admin"` === `false, "user", "supplier"`  
 `false, "user"` === `true, "admin", "supplier"`
   
-`true, user, "admin"` In these parameters, admin param is an instance model of the database table.  
+`true, user, "admin"` In these parameters, user param is an instance model of the database table.  
 
 ### Pagination
 There are two ways in pagination: **offset-based** and **cursor-based**. You can read more about pros and cons [here](https://www.prisma.io/docs/orm/prisma-client/queries/pagination). But you can use my pagination logic very easily.  
